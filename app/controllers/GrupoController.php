@@ -8,14 +8,14 @@ class GrupoController
         $grupos = $grupo->listar();
 
         require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/grupo/listar.php";
+        require_once BASE_PATH . "/app/views/listar.php";
         require_once BASE_PATH . "/app/views/footer.php";
     }
 
     public function criar()
     {
         require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/grupo/criar.php";
+        require_once BASE_PATH . "/app/views/criar.php";
         require_once BASE_PATH . "/app/views/footer.php";
     }
 

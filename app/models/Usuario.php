@@ -2,6 +2,7 @@
 
 require_once BASE_PATH . "/app/models/Database.php";
 
+
 class Usuario
 {
     private $pdo;

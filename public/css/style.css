@@ -1,40 +1,114 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #0d1b2a;
-    color: white;
+/* -- Reset básico -- */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Orbitron', sans-serif;
 }
 
+/* -- Fundo animado e vibrante -- */
+body {
+    background: linear-gradient(135deg, #0A1F44, #002E6D, #FFD700, #1DB954);
+    background-size: 400% 400%;
+    animation: groove 20s ease infinite;
+    color: #fff;
+    min-height: 100vh;
+    padding: 25px;
+}
+
+@keyframes groove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* -- Cabeçalho com estilo esportivo -- */
 header {
-    background: #1b263b;
-    padding: 20px;
     text-align: center;
+    font-size: 3rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #FFD700;
+    text-shadow: 2px 2px 8px #000;
+    margin-bottom: 30px;
 }
 
-nav a {
-    color: #00b4d8;
-    margin: 0 15px;
+/* -- Buttons modernos -- */
+button, .btn {
+    background: #FFD700;
+    color: #002E6D;
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform .3s, box-shadow .3s;
+}
+
+button:hover, .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 8px 15px rgba(0,0,0,0.4);
+}
+
+/* -- Cards de seleção/placar -- */
+.card {
+    background: rgba(0,0,0,0.7);
+    border-radius: 15px;
+    padding: 18px;
+    margin: 15px;
+    width: 280px;
+    text-align: center;
+    transition: transform .3s ease, background .3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    background: rgba(255,215,0,0.85);
+    color: #002E6D;
+}
+
+/* -- Títulos estilizados -- */
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* -- Links destacados -- */
+a {
+    color: #1DB954;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.3s;
 }
 
+a:hover {
+    color: #fff;
+    text-shadow: 1px 1px 6px #000;
+}
+
+/* -- Tabela (se tiver placares) -- */
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #1b263b;
-    margin-top: 20px;
+    margin: 20px 0;
+    font-size: 1rem;
+    color: #fff;
 }
 
-th, td {
-    padding: 12px;
-    border: 1px solid #415a77;
-    text-align: center;
+table th {
+    background: #1DB954;
+    padding: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
-button {
-    background: #00b4d8;
-    border: none;
-    padding: 8px 15px;
-    color: black;
-    cursor: pointer;
+table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+table tr:hover {
+    background: rgba(255, 215, 0, 0.3);
 }

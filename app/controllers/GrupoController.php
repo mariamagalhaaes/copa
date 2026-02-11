@@ -1,5 +1,7 @@
 <?php
 
+require_once BASE_PATH . "/app/models/Grupo.php";
+
 class GrupoController
 {
     public function listar()
@@ -8,35 +10,33 @@ class GrupoController
         $grupos = $grupo->listar();
 
         require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/listar.php";
+        require_once BASE_PATH . "/app/views/grupos/listar.php";
         require_once BASE_PATH . "/app/views/footer.php";
     }
 
     public function criar()
     {
         require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/criar.php";
+        require_once BASE_PATH . "/app/views/grupos/criar.php";
         require_once BASE_PATH . "/app/views/footer.php";
     }
 
     public function salvar()
     {
-        $nome = $_POST['nome'];
-
         $grupo = new Grupo();
-        $grupo->setNome($nome);
-        $grupo->salvar();
+        $grupo->salvar($_POST['nome']);
 
         header("Location: /copa/public/?controller=grupo&action=listar");
+        exit;
     }
 
     public function excluir()
     {
-        $id = $_GET['id'];
-
         $grupo = new Grupo();
-        $grupo->excluir($id);
+        $grupo->excluir($_GET['id']);
 
         header("Location: /copa/public/?controller=grupo&action=listar");
+        exit;
     }
 }
+?>

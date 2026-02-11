@@ -1,10 +1,10 @@
-<h2>Lista de Grupos</h2>
+<h2>Grupos</h2>
 
 <a href="/copa/public/?controller=grupo&action=criar">
     <button>Novo Grupo</button>
 </a>
 
-<?php if (count($grupos) > 0): ?>
+<?php if (!empty($grupos)): ?>
     <table>
         <tr>
             <th>ID</th>

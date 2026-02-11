@@ -1,48 +1,40 @@
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f6f9;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.topo {
-    background: linear-gradient(90deg, #0b6623, #1e90ff);
+    background: #0d1b2a;
     color: white;
-    padding: 20px 0;
-}
-
-.topo h1 {
     margin: 0;
 }
 
-nav {
-    margin-top: 10px;
+header {
+    background: #1b263b;
+    padding: 20px;
+    text-align: center;
 }
 
 nav a {
-    color: white;
+    color: #00b4d8;
+    margin: 0 15px;
     text-decoration: none;
-    margin-right: 15px;
     font-weight: bold;
 }
 
-nav a:hover {
-    text-decoration: underline;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1b263b;
+    margin-top: 20px;
 }
 
-main {
-    padding: 30px 0;
-}
-
-.rodape {
-    background: #111;
-    color: white;
+th, td {
+    padding: 12px;
+    border: 1px solid #415a77;
     text-align: center;
-    padding: 15px 0;
-    margin-top: 40px;
+}
+
+button {
+    background: #00b4d8;
+    border: none;
+    padding: 8px 15px;
+    color: black;
+    cursor: pointer;
 }

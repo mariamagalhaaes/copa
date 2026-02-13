@@ -1,76 +1,43 @@
 <?php
-
 require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../models/Selecao.php';
 
-class UsuarioController
-{
-    public function listar()
-    {
-        $model = new Usuario();
-        $usuarios = $model->listar();
 
-        require_once __DIR__ . '/../views/usuario/listar.php';
+class UsuarioController {
+    private $usuario;
+
+    public function __construct($pdo) {
+    $this->usuario = new Usuario($pdo);
+}
+
+
+    public function listar() {
+        $usuarios = $this->usuario->listar();
+        include "views/usuario/listar.php";
     }
 
-    public function criar()
-    {
-        $selecaoModel = new Selecao();
-        $selecoes = $selecaoModel->listar();
-
-        require_once __DIR__ . '/../views/usuario/criar.php';
-    }
-
-    public function salvar()
-    {
-        $nome    = $_POST['nome']    ?? null;
-        $idade   = $_POST['idade']   ?? null;
-        $selecao = $_POST['selecao'] ?? null;
-        $cargo   = $_POST['cargo']   ?? null;
-
-        if (!$nome || !$idade || !$selecao || !$cargo) {
-            die("Todos os campos são obrigatórios.");
+    public function cadastrar() {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->usuario->cadastrar($_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
+            header("Location: index.php?pagina=usuario_listar");
+            exit;
         }
-
-        $model = new Usuario();
-        $model->criar($nome, $idade, $selecao, $cargo);
-
-        header("Location: index.php?controller=usuario&action=listar");
-        exit;
+        include "views/usuario/cadastrar.php";
     }
 
-    public function editar()
-    {
-        $model = new Usuario();
-        $usuario = $model->buscarPorId($_GET['id']);
-
-        $selecaoModel = new Selecao();
-        $selecoes = $selecaoModel->listar();
-
-        require_once __DIR__ . '/../views/usuario/editar.php';
+    public function editar($id) {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->usuario->editar($id, $_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
+            header("Location: index.php?pagina=usuario_listar");
+            exit;
+        }
+        $usuario = $this->usuario->buscar($id);
+        include "views/usuario/editar.php";
     }
 
-    public function atualizar()
-    {
-        $model = new Usuario();
-        $model->atualizar(
-            $_POST['id'],
-            $_POST['nome'],
-            $_POST['idade'],
-            $_POST['selecao'],
-            $_POST['cargo']
-        );
-
-        header("Location: index.php?controller=usuario&action=listar");
-        exit;
-    }
-
-    public function excluir()
-    {
-        $model = new Usuario();
-        $model->excluir($_GET['id']);
-
-        header("Location: index.php?controller=usuario&action=listar");
+    public function excluir($id) {
+        $this->usuario->excluir($id);
+        header("Location: index.php?pagina=usuario_listar");
         exit;
     }
 }
+?>

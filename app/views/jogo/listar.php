@@ -1,6 +1,7 @@
 <h1>Jogos Cadastrados</h1>
 
 <a href="index.php?controller=jogo&action=criar">Novo Jogo</a>
+<a href="index.php" class="btn">Voltar para Home</a>
 
 <table border="1">
 <tr>

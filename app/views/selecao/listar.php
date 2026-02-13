@@ -1,6 +1,7 @@
 <h1>Seleções</h1>
 
 <a href="index.php?controller=selecao&action=criar">Nova Seleção</a>
+<a href="index.php" class="btn">Voltar para Home</a>
 
 <hr>
 

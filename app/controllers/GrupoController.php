@@ -26,7 +26,11 @@ class GrupoController
 
         require_once __DIR__ . '/../views/grupos/criar.php';
     }
-
+    public function excluir() {
+        $id = $_GET['id'];
+        $this->grupo->excluir($id);
+        header("Location: index.php?page=grupos");
+    }
     public function visualizar()
     {
         if (!isset($_GET['grupo'])) {
@@ -39,6 +43,14 @@ class GrupoController
 
         require_once __DIR__ . '/../views/grupos/visualizar.php';
     }
+
+        public function atualizar() {
+        $id = $_POST['id'];
+        $nome = $_POST['nome'];
+        $this->grupo->atualizar($id, $nome);
+        header("Location: index.php?page=grupos");
+    }
+
 }
 
 ?>

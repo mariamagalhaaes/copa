@@ -1,5 +1,7 @@
 <h2>Lista de Usuários</h2>
 <a href="?controller=usuario&action=criar">Criar Usuário</a>
+<a href="index.php" class="btn">Voltar para Home</a>
+
 <table border="1">
 <tr>
     <th>Nome</th>

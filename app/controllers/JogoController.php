@@ -21,38 +21,45 @@ class JogoController
         require_once __DIR__ . '/../views/jogo/criar.php';
     }
 
-    public function salvar()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+ public function salvar()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $model = new Jogo();
-            $model->criar(
-                $_POST['mandante_id'],
-                $_POST['visitante_id'],
-                $_POST['data_jogo'],
-                $_POST['estadio'],
-                $_POST['grupo']
-            );
+        $selecao_mandante  = $_POST['selecao_mandante']  ?? null;
+        $selecao_visitante = $_POST['selecao_visitante'] ?? null;
+        $data              = $_POST['data']              ?? null;
+        $horario           = $_POST['horario']           ?? null;
+        $estadio           = $_POST['estadio']           ?? null;
+        $grupo             = $_POST['grupo']             ?? null;
 
-            header("Location: index.php?controller=jogo&action=listar");
-            exit;
+        if (
+            !$selecao_mandante ||
+            !$selecao_visitante ||
+            !$data ||
+            !$horario ||
+            !$estadio ||
+            !$grupo
+        ) {
+            die("Erro: Todos os campos são obrigatórios.");
         }
+
+        $model = new Jogo();
+        $model->criar(
+            $selecao_mandante,
+            $selecao_visitante,
+            $data,
+            $horario,
+            $estadio,
+            $grupo
+        );
+
+        header("Location: index.php?controller=jogo&action=listar");
+        exit;
     }
 
-    public function registrarResultado()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-            $model = new Jogo();
-            $model->registrarResultado(
-                $_POST['jogo_id'],
-                $_POST['gols_mandante'],
-                $_POST['gols_visitante']
-            );
-
-            header("Location: index.php?controller=jogo&action=listar");
-            exit;
-        }
-    }
+    die("Requisição inválida.");
 }
+}
+  
+
 ?>

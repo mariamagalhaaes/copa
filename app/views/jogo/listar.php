@@ -1,40 +1,25 @@
-<h2>Jogos</h2>
+<h1>Jogos Cadastrados</h1>
 
-<a href="/copa/public/?controller=jogo&action=criar">
-    <button>Novo Jogo</button>
-</a>
+<a href="index.php?controller=jogo&action=criar">Novo Jogo</a>
 
-<?php if (!empty($jogos)): ?>
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>ID</th>
-            <th>Mandante</th>
-            <th>Visitante</th>
-            <th>Placar</th>
-            <th>Ações</th>
-        </tr>
+<table border="1">
+<tr>
+    <th>Mandante</th>
+    <th>Visitante</th>
+    <th>Data</th>
+    <th>Horário</th>
+    <th>Estádio</th>
+    <th>Grupo</th>
+</tr>
 
-        <?php foreach ($jogos as $jogo): ?>
-            <tr>
-                <td><?= $jogo['id'] ?></td>
-                <td><?= $jogo['mandante_nome'] ?></td>
-                <td><?= $jogo['visitante_nome'] ?></td>
-                <td>
-                    <?= $jogo['gols_mandante'] ?? 0 ?>
-                    x
-                    <?= $jogo['gols_visitante'] ?? 0 ?>
-                </td>
-                <td>
-                    <form method="post" action="/copa/public/?controller=jogo&action=resultado" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $jogo['id'] ?>">
-                        <input type="number" name="gols_mandante" placeholder="GM" required style="width:60px;">
-                        <input type="number" name="gols_visitante" placeholder="GV" required style="width:60px;">
-                        <button type="submit">Salvar Resultado</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-<?php else: ?>
-    <p>Nenhum jogo cadastrado.</p>
-<?php endif; ?>
+<?php foreach ($jogos as $j): ?>
+<tr>
+    <td><?= $j['selecao_mandante'] ?></td>
+    <td><?= $j['selecao_visitante'] ?></td>
+    <td><?= $j['data'] ?></td>
+    <td><?= $j['horario'] ?></td>
+    <td><?= $j['estadio'] ?></td>
+    <td><?= $j['grupo'] ?></td>
+</tr>
+<?php endforeach; ?>
+</table>

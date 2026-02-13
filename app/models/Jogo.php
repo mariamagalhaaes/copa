@@ -1,52 +1,30 @@
 <?php
 
-class JogoController
+require_once __DIR__ . '/../config/Conexao.php';
+
+class Jogo
 {
+    private $conn;
+
+    public function __construct()
+    {
+        $this->conn = Conexao::conectar();
+    }
+
     public function listar()
     {
-        $jogo = new Jogo();
-        $jogos = $jogo->listar();
-
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/listar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
+        $sql = "SELECT * FROM jogos ORDER BY id";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function criar()
+    public function criar($mandante, $visitante, $data, $horario, $estadio, $grupo)
     {
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/criar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
-    }
+        $sql = "INSERT INTO jogos 
+            (selecao_mandante, selecao_visitante, data, horario, estadio, grupo)
+            VALUES (?, ?, ?, ?, ?, ?)";
 
-    public function salvar()
-    {
-        $mandante   = $_POST['mandante'];
-        $visitante  = $_POST['visitante'];
-        $dataHora   = $_POST['data_hora'];
-        $estadio    = $_POST['estadio'];
-        $fase       = $_POST['fase'];
-
-        $jogo = new Jogo();
-        $jogo->setMandante($mandante);
-        $jogo->setVisitante($visitante);
-        $jogo->setDataHora($dataHora);
-        $jogo->setEstadio($estadio);
-        $jogo->setFase($fase);
-
-        $jogo->salvar();
-
-        header("Location: /copa/public/?controller=jogo&action=listar");
-    }
-
-    public function excluir()
-    {
-        $id = $_GET['id'];
-
-        $jogo = new Jogo();
-        $jogo->excluir($id);
-
-        header("Location: /copa/public/?controller=jogo&action=listar");
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$mandante, $visitante, $data, $horario, $estadio, $grupo]);
     }
 }
 

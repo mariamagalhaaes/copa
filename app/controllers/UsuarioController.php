@@ -1,6 +1,5 @@
 <?php
 
-
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/Selecao.php';
 
@@ -8,8 +7,8 @@ class UsuarioController
 {
     public function listar()
     {
-        $usuarioModel = new Usuario();
-        $usuarios = $usuarioModel->listar();
+        $model = new Usuario();
+        $usuarios = $model->listar();
 
         require_once __DIR__ . '/../views/usuario/listar.php';
     }
@@ -24,40 +23,26 @@ class UsuarioController
 
     public function salvar()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $nome    = $_POST['nome']    ?? null;
+        $idade   = $_POST['idade']   ?? null;
+        $selecao = $_POST['selecao'] ?? null;
+        $cargo   = $_POST['cargo']   ?? null;
 
-            if (
-                empty($_POST['nome']) ||
-                empty($_POST['idade']) ||
-                empty($_POST['selecao_id']) ||
-                empty($_POST['cargo'])
-            ) {
-                echo "Preencha todos os campos!";
-                return;
-            }
-
-            $usuarioModel = new Usuario();
-            $usuarioModel->criar(
-                $_POST['nome'],
-                $_POST['idade'],
-                $_POST['selecao_id'],
-                $_POST['cargo']
-            );
-
-            header("Location: index.php?controller=usuario&action=listar");
-            exit;
+        if (!$nome || !$idade || !$selecao || !$cargo) {
+            die("Todos os campos são obrigatórios.");
         }
+
+        $model = new Usuario();
+        $model->criar($nome, $idade, $selecao, $cargo);
+
+        header("Location: index.php?controller=usuario&action=listar");
+        exit;
     }
 
     public function editar()
     {
-        if (!isset($_GET['id'])) {
-            echo "ID não informado.";
-            return;
-        }
-
-        $usuarioModel = new Usuario();
-        $usuario = $usuarioModel->buscarPorId($_GET['id']);
+        $model = new Usuario();
+        $usuario = $model->buscarPorId($_GET['id']);
 
         $selecaoModel = new Selecao();
         $selecoes = $selecaoModel->listar();
@@ -67,36 +52,25 @@ class UsuarioController
 
     public function atualizar()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $model = new Usuario();
+        $model->atualizar(
+            $_POST['id'],
+            $_POST['nome'],
+            $_POST['idade'],
+            $_POST['selecao'],
+            $_POST['cargo']
+        );
 
-            $usuarioModel = new Usuario();
-            $usuarioModel->atualizar(
-                $_POST['id'],
-                $_POST['nome'],
-                $_POST['idade'],
-                $_POST['selecao_id'],
-                $_POST['cargo']
-            );
-
-            header("Location: index.php?controller=usuario&action=listar");
-            exit;
-        }
+        header("Location: index.php?controller=usuario&action=listar");
+        exit;
     }
 
     public function excluir()
     {
-        if (!isset($_GET['id'])) {
-            echo "ID não informado.";
-            return;
-        }
-
-        $usuarioModel = new Usuario();
-        $usuarioModel->excluir($_GET['id']);
+        $model = new Usuario();
+        $model->excluir($_GET['id']);
 
         header("Location: index.php?controller=usuario&action=listar");
         exit;
     }
 }
-
-
-?>

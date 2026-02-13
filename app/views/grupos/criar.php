@@ -1,9 +1,6 @@
+<h1>Cadastrar Grupo</h1>
 
-<h2>Novo Grupo</h2>
-
-<form method="post" action="/copa/public/?controller=grupo&action=salvar">
-    <label>Nome do Grupo</label>
-    <input type="text" name="nome" required>
-
+<form method="POST">
+    <input type="text" name="grupo" required>
     <button type="submit">Salvar</button>
 </form>

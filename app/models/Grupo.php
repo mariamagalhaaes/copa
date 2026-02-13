@@ -1,37 +1,36 @@
 <?php
 
-require_once BASE_PATH . "/app/models/Database.php";
+require_once __DIR__ . '/../config/Conexao.php';
 
 class Grupo
 {
-    private $pdo;
+    private $conn;
 
     public function __construct()
     {
-        $this->pdo = Database::conectar();
+        $this->conn = Conexao::conectar();
     }
 
     public function listar()
     {
-        $sql = "SELECT * FROM grupos ORDER BY id";
-        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM grupos ORDER BY grupo";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-   public function salvar($nome)
-{
-    $sql = "INSERT INTO grupos (grupo) VALUES (:grupo)";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(":grupo", $nome);
-    $stmt->execute();
-}
-
-
-    public function excluir($id)
+    public function criar($grupo)
     {
-        $sql = "DELETE FROM grupos WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(":id", $id);
-        $stmt->execute();
+        $sql = "INSERT INTO grupos (grupo) VALUES (?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$grupo]);
+    }
+
+    public function buscarPorGrupo($grupo)
+    {
+        $sql = "SELECT * FROM selecoes WHERE grupo = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$grupo]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+
 ?>

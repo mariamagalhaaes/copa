@@ -1,4 +1,6 @@
+<link rel="stylesheet" href="css/style.css">
 <?php
+
 
 define('BASE_PATH', dirname(__DIR__));
 

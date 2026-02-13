@@ -9,3 +9,4 @@ class HomeController
         require_once BASE_PATH . "/app/views/footer.php";
     }
 }
+?>

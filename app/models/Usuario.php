@@ -19,21 +19,44 @@ class Usuario
                 LEFT JOIN selecoes s ON u.selecao = s.id
                 ORDER BY u.nome";
 
-       
+         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    
+
     }
 
-    public function criar($nome, $idade, $cargo, $selecao)
+    public function buscarPorId($id)
     {
-        $sql = "INSERT INTO usuarios (nome, idade, cargo, selecao)
+        $sql = "SELECT * FROM usuarios WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function criar($nome, $idade, $selecaoId, $cargo)
+    {
+        $sql = "INSERT INTO usuarios (nome, idade, selecao_id, cargo)
                 VALUES (?, ?, ?, ?)";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$nome, $idade, $cargo, $selecao]);
+        $stmt->execute([$nome, $idade, $selecaoId, $cargo]);
+    }
+
+    public function atualizar($id, $nome, $idade, $selecaoId, $cargo)
+    {
+        $sql = "UPDATE usuarios
+                SET nome = ?, idade = ?, selecao_id = ?, cargo = ?
+                WHERE id = ?";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$nome, $idade, $selecaoId, $cargo, $id]);
     }
 
     public function excluir($id)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = ?");
+        $sql = "DELETE FROM usuarios WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
     }
 }
+
+?>

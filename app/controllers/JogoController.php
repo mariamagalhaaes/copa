@@ -1,90 +1,58 @@
 <?php
 
-<<<<<<< HEAD
-require_once BASE_PATH . "/app/models/Jogo.php";
-require_once BASE_PATH . "/app/models/Selecao.php";
+require_once __DIR__ . '/../models/Jogo.php';
+require_once __DIR__ . '/../models/Selecao.php';
 
-=======
->>>>>>> c25055491f53ce4caba3557de3cfbbc85736d5c4
 class JogoController
 {
     public function listar()
     {
-        $jogo = new Jogo();
-<<<<<<< HEAD
-        $jogos = $jogo->listar();
+        $model = new Jogo();
+        $jogos = $model->listar();
 
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/jogo/listar.php";
-=======
-        $jogo = $jogo->listar();
-
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/listar.php";
->>>>>>> c25055491f53ce4caba3557de3cfbbc85736d5c4
-        require_once BASE_PATH . "/app/views/footer.php";
+        require_once __DIR__ . '/../views/jogo/listar.php';
     }
 
     public function criar()
     {
-<<<<<<< HEAD
-        $selecao = new Selecao();
-        $selecoes = $selecao->listar();
+        $selecaoModel = new Selecao();
+        $selecoes = $selecaoModel->listar();
 
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/jogo/criar.php";
-=======
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/criar.php";
->>>>>>> c25055491f53ce4caba3557de3cfbbc85736d5c4
-        require_once BASE_PATH . "/app/views/footer.php";
+        require_once __DIR__ . '/../views/jogo/criar.php';
     }
 
     public function salvar()
     {
-<<<<<<< HEAD
-        $jogo = new Jogo();
-        $jogo->criar(
-            $_POST['mandante'],
-            $_POST['visitante'],
-            $_POST['data_hora'],
-            $_POST['estadio'],
-            $_POST['fase']
-        );
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        header("Location: /copa/public/?controller=jogo&action=listar");
-        exit;
+            $model = new Jogo();
+            $model->criar(
+                $_POST['mandante_id'],
+                $_POST['visitante_id'],
+                $_POST['data_jogo'],
+                $_POST['estadio'],
+                $_POST['grupo']
+            );
+
+            header("Location: index.php?controller=jogo&action=listar");
+            exit;
+        }
     }
 
-    public function resultado()
+    public function registrarResultado()
     {
-        $jogo = new Jogo();
-        $jogo->registrarResultado(
-            $_POST['id'],
-            $_POST['gols_mandante'],
-            $_POST['gols_visitante']
-        );
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        header("Location: /copa/public/?controller=jogo&action=listar");
-        exit;
-=======
-        $nome = $_POST['nome'];
+            $model = new Jogo();
+            $model->registrarResultado(
+                $_POST['jogo_id'],
+                $_POST['gols_mandante'],
+                $_POST['gols_visitante']
+            );
 
-        $jogo = new Jogo();
-        $jogo->setNome($nome);
-        $jogo->salvar();
-
-        header("Location: /copa/public/?controller=jogo&action=listar");
-    }
-
-    public function excluir()
-    {
-        $id = $_GET['id'];
-
-        $jogo = new Jogo();
-        $jogo->excluir($id);
-
-        header("Location: /copa/public/?controller=jogo&action=listar");
->>>>>>> c25055491f53ce4caba3557de3cfbbc85736d5c4
+            header("Location: index.php?controller=jogo&action=listar");
+            exit;
+        }
     }
 }
+?>

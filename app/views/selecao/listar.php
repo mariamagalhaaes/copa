@@ -1,33 +1,23 @@
-<h2>Seleções</h2>
+<h1>Seleções</h1>
 
-<a href="/copa/public/?controller=selecao&action=criar">
-    <button>Nova Seleção</button>
-</a>
+<a href="index.php?controller=selecao&action=criar">Nova Seleção</a>
 
-<?php if (!empty($selecoes)): ?>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Seleção</th>
-            <th>Continente</th>
-            <th>Grupo</th>
-            <th>Ações</th>
-        </tr>
+<hr>
 
-        <?php foreach ($selecoes as $selecao): ?>
-            <tr>
-                <td><?= $selecao['id'] ?></td>
-                <td><?= $selecao['nome'] ?></td>
-                <td><?= $selecao['continente'] ?></td>
-                <td><?= $selecao['grupo_nome'] ?? '-' ?></td>
-                <td>
-                    <a href="/copa/public/?controller=selecao&action=excluir&id=<?= $selecao['id'] ?>">
-                        Excluir
-                    </a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-<?php else: ?>
+<?php if (count($selecoes) == 0): ?>
     <p>Nenhuma seleção cadastrada.</p>
+<?php else: ?>
+    <ul>
+        <?php foreach ($selecoes as $s): ?>
+            <li>
+                <?= $s['nome'] ?> |
+                <?= $s['continente'] ?> |
+                Grupo <?= $s['grupo'] ?>
+                |
+                <a href="index.php?controller=selecao&action=editar&id=<?= $s['id'] ?>">Editar</a>
+                |
+                <a href="index.php?controller=selecao&action=excluir&id=<?= $s['id'] ?>">Excluir</a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 <?php endif; ?>

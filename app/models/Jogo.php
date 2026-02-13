@@ -49,3 +49,5 @@ class JogoController
         header("Location: /copa/public/?controller=jogo&action=listar");
     }
 }
+
+?>

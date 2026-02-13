@@ -1,20 +1,21 @@
-<h2>Cadastrar Seleção</h2>
+<h1>Cadastrar Seleção</h1>
 
-<form method="post" action="/copa/public/?controller=selecao&action=salvar">
+<form method="POST" action="index.php?controller=selecao&action=salvar">
+    <label>Nome:</label>
+    <input type="text" name="nome" required>
 
-    <label>Nome da Seleção</label><br>
-    <input type="text" name="nome" required><br><br>
+    <br><br>
 
-    <label>Continente</label><br>
-    <input type="text" name="continente" required><br><br>
+    <label>Continente:</label>
+    <input type="text" name="continente" required>
 
-    <label>Grupo</label><br>
+    <br><br>
+
+    <label>Grupo:</label>
     <select name="grupo" required>
-        <option value="">Selecione o grupo</option>
-
-        <?php foreach ($grupos as $grupo): ?>
-            <option value="<?= $grupo['id'] ?>">
-                <?= isset($grupo['nome']) ? $grupo['nome'] : $grupo['grupo'] ?>
+        <?php foreach ($grupos as $g): ?>
+            <option value="<?= $g['grupo'] ?>">
+                Grupo <?= $g['grupo'] ?>
             </option>
         <?php endforeach; ?>
     </select>
@@ -22,8 +23,7 @@
     <br><br>
 
     <button type="submit">Salvar</button>
-    <a href="/copa/public/?controller=selecao&action=listar">
-        <button type="button">Cancelar</button>
-    </a>
-
 </form>
+
+<br>
+<a href="index.php?controller=selecao&action=listar">Voltar</a>

@@ -1,49 +1,37 @@
-<link rel="stylesheet" href="css/style.css">
 <?php
-
-
 define('BASE_PATH', dirname(__DIR__));
 
 require_once BASE_PATH . '/app/models/Database.php';
-require_once BASE_PATH . '/app/models/Usuario.php';
 
-class UsuarioController {
-    private $usuario;
+$controller = $_GET['controller'] ?? 'home';
+$action = $_GET['action'] ?? 'index';
 
-    public function __construct() {
-        $pdo = Database::getConnection(); // pega PDO dentro do próprio controller
-        $this->usuario = new Usuario($pdo);
+$controllerName = ucfirst($controller) . "Controller";
+$controllerFile = BASE_PATH . "/app/controllers/$controllerName.php";
+
+if (file_exists($controllerFile)) {
+    require_once $controllerFile;
+    $obj = new $controllerName();
+
+    if (method_exists($obj, $action)) {
+        ob_start(); // captura a saída da view
+        $obj->$action();
+        $content = ob_get_clean();
+    } else {
+        $content = "Ação não encontrada.";
     }
-
-    public function listar() {
-        $usuarios = $this->usuario->listar();
-        include BASE_PATH . '/app/views/usuario/listar.php';
-    }
-
-    public function cadastrar() {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->usuario->cadastrar($_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
-            header("Location: ?controller=usuario&action=listar");
-            exit;
-        }
-        include BASE_PATH . '/app/views/usuario/cadastrar.php';
-    }
-
-    public function editar($id) {
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->usuario->editar($id, $_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
-            header("Location: ?controller=usuario&action=listar");
-            exit;
-        }
-        $usuario = $this->usuario->buscar($id);
-        include BASE_PATH . '/app/views/usuario/editar.php';
-    }
-
-    public function excluir($id) {
-        $this->usuario->excluir($id);
-        header("Location: ?controller=usuario&action=listar");
-        exit;
-    }
+} else {
+    $content = "Controller não encontrado.";
 }
-
 ?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Copa</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <?= $content ?>
+</body>
+</html>

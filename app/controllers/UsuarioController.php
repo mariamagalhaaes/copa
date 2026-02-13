@@ -1,43 +1,49 @@
 <?php
-require_once __DIR__ . '/../models/Usuario.php';
-
+require_once BASE_PATH . '/app/models/Usuario.php';
 
 class UsuarioController {
     private $usuario;
 
-    public function __construct($pdo) {
-    $this->usuario = new Usuario($pdo);
-}
-
-
-    public function listar() {
-        $usuarios = $this->usuario->listar();
-        include "views/usuario/listar.php";
+    public function __construct() {
+        $this->usuario = new Usuario();
     }
 
-    public function cadastrar() {
+public function listar() {
+    $sql = "
+        SELECT u.id, u.nome, u.idade, u.cargo, s.nome AS selecao
+        FROM usuarios u
+        LEFT JOIN selecoes s ON u.selecao_id = s.id
+        ORDER BY u.nome
+    ";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+    public function criar() {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->usuario->cadastrar($_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
-            header("Location: index.php?pagina=usuario_listar");
+            $this->usuario->criar($_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
+            header("Location: ?controller=usuario&action=listar");
             exit;
         }
-        include "views/usuario/cadastrar.php";
+        include BASE_PATH . '/app/views/usuario/criar.php';
     }
 
     public function editar($id) {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->usuario->editar($id, $_POST['nome'], $_POST['idade'], $_POST['cargo'], $_POST['selecao_id']);
-            header("Location: index.php?pagina=usuario_listar");
+            header("Location: ?controller=usuario&action=listar");
             exit;
         }
         $usuario = $this->usuario->buscar($id);
-        include "views/usuario/editar.php";
+        include BASE_PATH . '/app/views/usuario/editar.php';
     }
 
     public function excluir($id) {
         $this->usuario->excluir($id);
-        header("Location: index.php?pagina=usuario_listar");
+        header("Location: ?controller=usuario&action=listar");
         exit;
     }
 }
+
 ?>

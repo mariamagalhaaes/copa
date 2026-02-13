@@ -1,5 +1,5 @@
 <h2>Usuários</h2>
-<a href="index.php?pagina=usuario_cadastrar">Cadastrar Usuário</a>
+<a href="?controller=usuario&action=criar">Criar Usuário</a>
 <table border="1">
     <tr>
         <th>Nome</th>
@@ -15,8 +15,8 @@
         <td><?= $u['cargo'] ?></td>
         <td><?= $u['selecao'] ?></td>
         <td>
-            <a href="index.php?pagina=usuario_editar&id=<?= $u['id'] ?>">Editar</a> | 
-            <a href="index.php?pagina=usuario_excluir&id=<?= $u['id'] ?>" onclick="return confirm('Tem certeza?')">Excluir</a>
+            <a href="?controller=usuario&action=editar&id=<?= $u['id'] ?>">Editar</a> | 
+            <a href="?controller=usuario&action=excluir&id=<?= $u['id'] ?>" onclick="return confirm('Tem certeza?')">Excluir</a>
         </td>
     </tr>
     <?php endforeach; ?>

@@ -1,31 +1,23 @@
 <?php
+class Database {
+    private static $pdo;
 
-
-class Database
-{
-    private static $host = "localhost";
-    private static $db = "copa";
-    private static $user = "root";
-    private static $pass = "";
-    private static $conn;
-
-    public static function conectar()
-    {
-        if (!isset(self::$conn)) {
+    public static function getConnection() {
+        if (!self::$pdo) {
+            $host = "localhost";
+            $db   = "copa";
+            $user = "root";
+            $pass = "";
             try {
-                self::$conn = new PDO(
-                    "mysql:host=" . self::$host . ";dbname=" . self::$db,
-                    self::$user,
-                    self::$pass
-                );
-                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                die("Erro ao conectar com o banco: " . $e->getMessage());
+                self::$pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch(PDOException $e) {
+                die("Erro ao conectar: " . $e->getMessage());
             }
         }
-
-        return self::$conn;
+        return self::$pdo;
     }
 }
+
 ?>
 

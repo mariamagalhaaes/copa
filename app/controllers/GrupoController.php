@@ -1,42 +1,56 @@
 <?php
 
+require_once __DIR__ . '/../models/Grupo.php';
+
 class GrupoController
 {
     public function listar()
     {
-        $grupo = new Grupo();
-        $grupos = $grupo->listar();
+        $grupoModel = new Grupo();
+        $grupos = $grupoModel->listar();
 
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/listar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
+        require_once __DIR__ . '/../views/grupos/listar.php';
     }
 
     public function criar()
     {
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/criar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $grupo = $_POST['grupo'];
+
+            $grupoModel = new Grupo();
+            $grupoModel->criar($grupo);
+
+            header("Location: index.php?controller=grupo&action=listar");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/grupos/criar.php';
     }
-
-    public function salvar()
-    {
-        $nome = $_POST['nome'];
-
-        $grupo = new Grupo();
-        $grupo->setNome($nome);
-        $grupo->salvar();
-
-        header("Location: /copa/public/?controller=grupo&action=listar");
-    }
-
-    public function excluir()
-    {
+    public function excluir() {
         $id = $_GET['id'];
-
-        $grupo = new Grupo();
-        $grupo->excluir($id);
-
-        header("Location: /copa/public/?controller=grupo&action=listar");
+        $this->grupo->excluir($id);
+        header("Location: index.php?page=grupos");
     }
+    public function visualizar()
+    {
+        if (!isset($_GET['grupo'])) {
+            header("Location: index.php?controller=grupo&action=listar");
+            exit;
+        }
+
+        $grupoModel = new Grupo();
+        $selecoes = $grupoModel->buscarPorGrupo($_GET['grupo']);
+
+        require_once __DIR__ . '/../views/grupos/visualizar.php';
+    }
+
+        public function atualizar() {
+        $id = $_POST['id'];
+        $nome = $_POST['nome'];
+        $this->grupo->atualizar($id, $nome);
+        header("Location: index.php?page=grupos");
+    }
+
 }
+
+?>

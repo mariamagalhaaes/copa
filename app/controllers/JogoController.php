@@ -1,42 +1,65 @@
 <?php
 
+require_once __DIR__ . '/../models/Jogo.php';
+require_once __DIR__ . '/../models/Selecao.php';
+
 class JogoController
 {
     public function listar()
     {
-        $jogo = new Jogo();
-        $jogo = $jogo->listar();
+        $model = new Jogo();
+        $jogos = $model->listar();
 
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/listar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
+        require_once __DIR__ . '/../views/jogo/listar.php';
     }
 
     public function criar()
     {
-        require_once BASE_PATH . "/app/views/header.php";
-        require_once BASE_PATH . "/app/views/criar.php";
-        require_once BASE_PATH . "/app/views/footer.php";
+        $selecaoModel = new Selecao();
+        $selecoes = $selecaoModel->listar();
+
+        require_once __DIR__ . '/../views/jogo/criar.php';
     }
 
-    public function salvar()
-    {
-        $nome = $_POST['nome'];
+ public function salvar()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $jogo = new Jogo();
-        $jogo->setNome($nome);
-        $jogo->salvar();
+        $selecao_mandante  = $_POST['selecao_mandante']  ?? null;
+        $selecao_visitante = $_POST['selecao_visitante'] ?? null;
+        $data              = $_POST['data']              ?? null;
+        $horario           = $_POST['horario']           ?? null;
+        $estadio           = $_POST['estadio']           ?? null;
+        $grupo             = $_POST['grupo']             ?? null;
 
-        header("Location: /copa/public/?controller=jogo&action=listar");
+        if (
+            !$selecao_mandante ||
+            !$selecao_visitante ||
+            !$data ||
+            !$horario ||
+            !$estadio ||
+            !$grupo
+        ) {
+            die("Erro: Todos os campos são obrigatórios.");
+        }
+
+        $model = new Jogo();
+        $model->criar(
+            $selecao_mandante,
+            $selecao_visitante,
+            $data,
+            $horario,
+            $estadio,
+            $grupo
+        );
+
+        header("Location: index.php?controller=jogo&action=listar");
+        exit;
     }
 
-    public function excluir()
-    {
-        $id = $_GET['id'];
-
-        $jogo = new Jogo();
-        $jogo->excluir($id);
-
-        header("Location: /copa/public/?controller=jogo&action=listar");
-    }
+    die("Requisição inválida.");
 }
+}
+  
+
+?>

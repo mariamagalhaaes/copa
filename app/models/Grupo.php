@@ -1,47 +1,52 @@
 <?php
 
-require_once BASE_PATH . "/app/models/Database.php";
+require_once __DIR__ . '/../config/Conexao.php';
 
 class Grupo
 {
-    private $id;
-    private $nome;
-    private $pdo;
+    private $conn;
 
     public function __construct()
     {
-        $this->pdo = Database::conectar();
-    }
-
-    public function setNome($nome)
-    {
-        $this->nome = $nome;
+        $this->conn = Conexao::conectar();
     }
 
     public function listar()
-{
-    $sql = "SELECT * FROM grupos ORDER BY id";
-    return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function salvar()
-{
-    $sql = "INSERT INTO grupos (grupo) VALUES (:grupo)";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(":nome", $this->nome);
-    $stmt->execute();
-}
-
-
-
-    public function excluir($id) {
     {
-        $sql = "DELETE FROM grupos WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(":id", $id);
-        $stmt->execute();
+        $sql = "SELECT * FROM grupos ORDER BY grupo";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-}
+
+
+    public function criar($grupo)
+    {
+        $sql = "INSERT INTO grupos (grupo) VALUES (?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$grupo]);
+    }
+
+    
+    public function excluir($id) {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+    }
+
+    public function buscarPorGrupo($grupo)
+    {
+        $sql = "SELECT * FROM selecoes WHERE grupo = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$grupo]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+        public function atualizar($id, $nome) {
+        $query = "UPDATE " . $this->table . " SET nome = :nome WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":nome", $nome);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+    }
 }
 
 ?>

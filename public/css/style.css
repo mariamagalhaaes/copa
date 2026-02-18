@@ -1,48 +1,161 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
+    background: linear-gradient(135deg, #0b3d2e, #061c16);
+    color: #fff;
+    min-height: 100vh;
 }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: auto;
+/* ===== HEADER ===== */
+header {
+    background: #022e1f;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #fcd116;
 }
 
-.topo {
-    background: linear-gradient(90deg, #0b6623, #1e90ff);
-    color: white;
-    padding: 20px 0;
+header h1 {
+    color: #fcd116;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
 }
 
-.topo h1 {
-    margin: 0;
-}
-
+/* ===== MENU ===== */
 nav {
-    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 15px;
 }
 
 nav a {
-    color: white;
+    color: #fff;
     text-decoration: none;
-    margin-right: 15px;
-    font-weight: bold;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    color: #fcd116;
 }
 
-main {
-    padding: 30px 0;
+/* ===== CONTAINER ===== */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
 }
 
-.rodape {
-    background: #111;
-    color: white;
+/* ===== CARDS ===== */
+.card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    color: #fcd116;
+    margin-bottom: 15px;
+}
+
+/* ===== TABELAS ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table thead {
+    background: #046a38;
+}
+
+table th, table td {
+    padding: 12px;
     text-align: center;
-    padding: 15px 0;
+}
+
+table th {
+    color: #fcd116;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+table tr:nth-child(even) {
+    background: rgba(255,255,255,0.05);
+}
+
+table tr:hover {
+    background: rgba(252, 209, 22, 0.15);
+}
+
+/* ===== FORMULÁRIOS ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, select {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 0 2px #fcd116;
+}
+
+/* ===== BOTÕES ===== */
+button, .btn {
+    background: linear-gradient(135deg, #fcd116, #ffdd44);
+    color: #022e1f;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover, .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(252, 209, 22, 0.4);
+}
+
+/* ===== AÇÕES ===== */
+.btn-edit {
+    background: #1e90ff;
+    color: #fff;
+}
+
+.btn-delete {
+    background: #e63946;
+    color: #fff;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 20px;
     margin-top: 40px;
+    font-size: 0.9rem;
+    color: #ccc;
 }

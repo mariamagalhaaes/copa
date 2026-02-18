@@ -1,45 +1,39 @@
+
 <?php
-
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 define('BASE_PATH', dirname(__DIR__));
 
-spl_autoload_register(function ($class) {
-    if (file_exists(BASE_PATH . "/app/controllers/$class.php")) {
-        require_once BASE_PATH . "/app/controllers/$class.php";
-    }
+require_once BASE_PATH . '/app/models/Database.php';
 
-    if (file_exists(BASE_PATH . "/app/models/$class.php")) {
-        require_once BASE_PATH . "/app/models/$class.php";
-    }
-});
+$controller = $_GET['controller'] ?? 'home';
+$action = $_GET['action'] ?? 'index';
 
-$controller = isset($_GET['controller'])
-    ? ucfirst($_GET['controller']) . "Controller"
-    : null;
+$controllerName = ucfirst($controller) . "Controller";
+$controllerFile = BASE_PATH . "/app/controllers/$controllerName.php";
 
-$action = isset($_GET['action'])
-    ? $_GET['action']
-    : null;
+if (file_exists($controllerFile)) {
+    require_once $controllerFile;
+    $obj = new $controllerName();
 
-if (!$controller) {
-    require_once BASE_PATH . "/app/views/home.php";
-    exit;
-}
-
-if (class_exists($controller)) {
-    $obj = new $controller();
-
-    if ($action && method_exists($obj, $action)) {
+    if (method_exists($obj, $action)) {
+        ob_start(); // captura a saída da view
         $obj->$action();
+        $content = ob_get_clean();
     } else {
-        echo "Ação não encontrada";
+        $content = "Ação não encontrada.";
     }
 } else {
-    echo "Controller não encontrado";
+    $content = "Controller não encontrado.";
 }
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Copa</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <?= $content ?>
+</body>
+</html>
 
-
- ?>

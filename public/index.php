@@ -24,6 +24,7 @@ if (file_exists($controllerFile)) {
 } else {
     $content = "Controller não encontrado.";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -31,6 +32,7 @@ if (file_exists($controllerFile)) {
     <meta charset="UTF-8">
     <title>Copa</title>
     <link rel="stylesheet" href="css/style.css">
+    
 </head>
 <body>
     <?= $content ?>

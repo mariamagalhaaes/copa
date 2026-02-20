@@ -1,6 +1,6 @@
 <?php
 
-require_once "config/Database.php";
+require_once(__DIR__ . '/../config/Conexao.php');
 
 class Resultado {
 
@@ -11,6 +11,7 @@ class Resultado {
         $this->conn = $database->getConnection();
     }
 
+    // 🔹 REGISTRAR RESULTADO DO JOGO
     public function registrarResultado($jogo_id, $gols_mandante, $gols_visitante) {
 
         // Atualiza placar no jogo
@@ -39,6 +40,7 @@ class Resultado {
         $this->atualizarClassificacao($visitante, $gols_visitante, $gols_mandante);
     }
 
+    // 🔹 ATUALIZA CLASSIFICAÇÃO
     private function atualizarClassificacao($selecao_id, $gols_pro, $gols_contra) {
 
         $pontos = 0;
@@ -83,4 +85,15 @@ class Resultado {
 
         $stmt->execute();
     }
+
+public function classificacao() {
+
+    $sql = "SELECT *
+            FROM classificacao
+            ORDER BY pontos DESC, saldo_gols DESC";
+
+    $stmt = $this->conn->query($sql);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

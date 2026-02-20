@@ -11,33 +11,50 @@ class Resultado {
         $this->conn = $database->getConnection();
     }
 
-    // 🔹 REGISTRAR RESULTADO DO JOGO
-    public function registrarResultado($jogo_id, $gols_mandante, $gols_visitante) {
+    public function registrar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Atualiza placar no jogo
-        $sql = "UPDATE jogos 
-                SET gols_mandante = ?, gols_visitante = ?
-                WHERE id = ?";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("iii", $gols_mandante, $gols_visitante, $jogo_id);
-        $stmt->execute();
+            $jogo_id = $_POST['jogo_id'];
+            $gols_mandante = $_POST['gols_mandante'];
+            $gols_visitante = $_POST['gols_visitante'];
 
-        // Buscar seleções do jogo
-        $sqlJogo = "SELECT selecao_mandante_id, selecao_visitante_id 
-                    FROM jogos WHERE id = ?";
-        
-        $stmtJogo = $this->conn->prepare($sqlJogo);
-        $stmtJogo->bind_param("i", $jogo_id);
-        $stmtJogo->execute();
-        $resultadoJogo = $stmtJogo->get_result()->fetch_assoc();
+            // Atualiza placar no jogo
+            $sql = "UPDATE jogos 
+                    SET gols_mandante = :gols_mandante, gols_visitante = :gols_visitante
+                    WHERE id = :id";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':gols_mandante', $gols_mandante);
+            $stmt->bindParam(':gols_visitante', $gols_visitante);
+            $stmt->bindParam(':id', $jogo_id);
+            $stmt->execute();
 
-        $mandante = $resultadoJogo['selecao_mandante_id'];
-        $visitante = $resultadoJogo['selecao_visitante_id'];
+            // Buscar seleções do jogo
+            $sqlJogo = "SELECT selecao_mandante, selecao_visitante 
+                        FROM jogos WHERE id = :id";
+            
+            $stmtJogo = $this->conn->prepare($sqlJogo);
+            $stmtJogo->bindParam(':id', $jogo_id);
+            $stmtJogo->execute();
+            $resultadoJogo = $stmtJogo->fetch(PDO::FETCH_ASSOC);
 
-        // Atualizar classificação
-        $this->atualizarClassificacao($mandante, $gols_mandante, $gols_visitante);
-        $this->atualizarClassificacao($visitante, $gols_visitante, $gols_mandante);
+            if (!$resultadoJogo) {
+                echo "Erro: Jogo não encontrado. Verifique o ID enviado.";
+                return;
+            }
+
+            $mandante = $resultadoJogo['selecao_mandante'];
+            $visitante = $resultadoJogo['selecao_visitante'];
+
+            // Atualizar classificação
+            $this->atualizarClassificacao($mandante, $gols_mandante, $gols_visitante);
+            $this->atualizarClassificacao($visitante, $gols_visitante, $gols_mandante);
+
+            // Redireciona após registrar
+            header("Location: index.php?controller=resultado&action=listar");
+            exit;
+        }
     }
 
     // 🔹 ATUALIZA CLASSIFICAÇÃO
@@ -60,40 +77,43 @@ class Resultado {
 
         $saldo = $gols_pro - $gols_contra;
 
+        // Ajuste da coluna da tabela classificacao: selecao
         $sql = "UPDATE classificacao SET 
-                pontos = pontos + ?, 
-                vitorias = vitorias + ?, 
-                empates = empates + ?, 
-                derrotas = derrotas + ?, 
-                gols_pro = gols_pro + ?, 
-                gols_contra = gols_contra + ?, 
-                saldo_gols = saldo_gols + ?
-                WHERE selecao_id = ?";
+                pontos = pontos + :pontos, 
+                vitorias = vitorias + :vitorias, 
+                empates = empates + :empates, 
+                derrotas = derrotas + :derrotas, 
+                gols_pro = gols_pro + :gols_pro, 
+                gols_contra = gols_contra + :gols_contra, 
+                saldo_gols = saldo_gols + :saldo
+                WHERE selecao = :selecao_id";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param(
-            "iiiiiiii",
-            $pontos,
-            $vitorias,
-            $empates,
-            $derrotas,
-            $gols_pro,
-            $gols_contra,
-            $saldo,
-            $selecao_id
-        );
+        $stmt->bindParam(':pontos', $pontos);
+        $stmt->bindParam(':vitorias', $vitorias);
+        $stmt->bindParam(':empates', $empates);
+        $stmt->bindParam(':derrotas', $derrotas);
+        $stmt->bindParam(':gols_pro', $gols_pro);
+        $stmt->bindParam(':gols_contra', $gols_contra);
+        $stmt->bindParam(':saldo', $saldo);
+        $stmt->bindParam(':selecao_id', $selecao_id);
 
         $stmt->execute();
     }
 
-public function classificacao() {
+    public function classificacao() {
+        $sql = "SELECT *
+                FROM classificacao
+                ORDER BY pontos DESC, saldo_gols DESC";
 
-    $sql = "SELECT *
-            FROM classificacao
-            ORDER BY pontos DESC, saldo_gols DESC";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-    $stmt = $this->conn->query($sql);
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    // Listar resultados de jogos
+    public function listar() {
+        $sql = "SELECT * FROM jogos ORDER BY data, horario";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

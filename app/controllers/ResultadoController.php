@@ -4,6 +4,7 @@ require_once __DIR__ . '/../models/Resultado.php';
 
 class ResultadoController
 {
+    // Listar todos os resultados de jogos
     public function listar()
     {
         $resultadoModel = new Resultado();
@@ -12,28 +13,29 @@ class ResultadoController
         require_once __DIR__ . '/../views/resultados/listar.php';
     }
 
+    // Formulário para registrar resultado
+    public function form()
+    {
+        require_once __DIR__ . '/../views/resultados/registrar.php';
+    }
+
+    // Registrar resultado no banco
     public function registrar()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $jogo_id = $_POST['jogo_id'];
-            $gols_mandante = $_POST['gols_mandante'];
-            $gols_visitante = $_POST['gols_visitante'];
-
+            // Cria o Model
             $resultadoModel = new Resultado();
-            $resultadoModel->registrarResultado(
-                $jogo_id,
-                $gols_mandante,
-                $gols_visitante
-            );
 
-            // Redireciona para listagem depois de salvar
+            // Chama o método do Model que já pega $_POST
+            $resultadoModel->registrar();
+
+            // Redireciona para a listagem após salvar
             header("Location: index.php?controller=resultado&action=listar");
             exit;
+        } else {
+            // Se não for POST, mostra o formulário
+            $this->form();
         }
-    }
-    public function form()
-    {
-        require_once __DIR__ . '/../views/resultados/registrar.php';
     }
 }

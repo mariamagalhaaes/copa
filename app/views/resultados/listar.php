@@ -12,10 +12,10 @@
 
     <?php foreach ($resultados as $r): ?>
         <tr>
-            <td><?= $r['selecao'] ?></td>
-            <td><?= $r['pontos'] ?></td>
-            <td><?= $r['gols_marcados'] ?></td>
-            <td><?= $r['gols_sofridos'] ?></td>
+<td><?= $r['selecao_mandante'] ?></td>
+<td><?= $r['gols_mandante'] ?></td>
+<td><?= $r['selecao_visitante'] ?></td>
+<td><?= $r['gols_visitante'] ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

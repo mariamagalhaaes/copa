@@ -15,7 +15,7 @@ if (file_exists($controllerFile)) {
     $obj = new $controllerName();
 
     if (method_exists($obj, $action)) {
-        ob_start(); // captura a saída da view
+        ob_start(); 
         $obj->$action();
         $content = ob_get_clean();
     } else {

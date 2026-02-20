@@ -35,6 +35,7 @@ if (file_exists($controllerFile)) {
     
 </head>
 <body>
+    <?php require_once BASE_PATH . "/app/views/header.php"; ?>
     <?= $content ?>
 </body>
 </html>

@@ -6,13 +6,11 @@
 <br><br>
 
 <div>
-    <a href="index.php?controller=resultado&action=index">
+    <a href="index.php?controller=resultado&action=form">
         <button>Registrar Resultado</button>
     </a>
 
-    <a href="index.php?controller=classificacao&action=index">
-        <button>Ver Classificação</button>
-    </a>
+    
 </div>
 
 <?php require_once BASE_PATH . "/app/views/footer.php"; ?>

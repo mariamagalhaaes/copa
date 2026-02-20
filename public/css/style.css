@@ -1,154 +1,132 @@
+/* ===== GOOGLE FONT ===== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap');
+
 /* ===== RESET ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', Arial, sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #0b3d2e, #061c16);
-    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, #0a0f1f, #111a2e);
+    color: #ffffff;
     min-height: 100vh;
 }
 
 /* ===== HEADER ===== */
 header {
-    background: #022e1f;
-    padding: 20px;
+    background: linear-gradient(90deg, #00ff88, #00c3ff);
+    padding: 25px;
     text-align: center;
-    border-bottom: 3px solid #fcd116;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
 }
 
 header h1 {
-    color: #fcd116;
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-}
-
-/* ===== MENU ===== */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    margin-top: 15px;
-}
-
-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    color: #fcd116;
+    font-size: 2.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
 }
 
 /* ===== CONTAINER ===== */
 .container {
     width: 90%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 40px auto;
 }
 
-/* ===== CARDS ===== */
+/* ===== CARD ===== */
 .card {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 15px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
     padding: 25px;
     margin-bottom: 30px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    transition: transform 0.3s;
+    box-shadow: 0 0 25px rgba(0,255,136,0.15);
+    transition: 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 0 35px rgba(0,195,255,0.3);
 }
 
 .card h2 {
-    color: #fcd116;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    color: #00ff88;
 }
 
-/* ===== TABELAS ===== */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-table thead {
-    background: #046a38;
-}
-
-table th, table td {
-    padding: 12px;
-    text-align: center;
-}
-
-table th {
-    color: #fcd116;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
-
-table tr:nth-child(even) {
-    background: rgba(255,255,255,0.05);
-}
-
-table tr:hover {
-    background: rgba(252, 209, 22, 0.15);
-}
-
-/* ===== FORMULÁRIOS ===== */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
+/* ===== INPUTS ===== */
 input, select {
+    width: 100%;
     padding: 12px;
-    border-radius: 8px;
+    margin-bottom: 15px;
+    border-radius: 10px;
     border: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
     outline: none;
-    font-size: 1rem;
-}
-
-input:focus, select:focus {
-    box-shadow: 0 0 0 2px #fcd116;
 }
 
 /* ===== BOTÕES ===== */
-button, .btn {
-    background: linear-gradient(135deg, #fcd116, #ffdd44);
-    color: #022e1f;
-    padding: 12px;
+button {
+    background: linear-gradient(135deg, #00c3ff, #7a00ff);
     border: none;
-    border-radius: 8px;
-    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
 }
 
-button:hover, .btn:hover {
+button:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(252, 209, 22, 0.4);
+    box-shadow: 0 0 20px #7a00ff;
 }
 
-/* ===== AÇÕES ===== */
+/* ===== TABELA CLASSIFICAÇÃO ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+table th {
+    background: linear-gradient(135deg, #00ff88, #00c3ff);
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+table td {
+    padding: 12px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+}
+
+table tr:hover td {
+    background: rgba(0,255,136,0.15);
+}
+
+/* ===== BOTÕES DE AÇÃO ===== */
 .btn-edit {
-    background: #1e90ff;
-    color: #fff;
+    background: #00c3ff;
 }
 
 .btn-delete {
-    background: #e63946;
-    color: #fff;
+    background: #ff004c;
+}
+
+.btn-edit:hover {
+    box-shadow: 0 0 15px #00c3ff;
+}
+
+.btn-delete:hover {
+    box-shadow: 0 0 15px #ff004c;
 }
 
 /* ===== FOOTER ===== */
@@ -156,6 +134,5 @@ footer {
     text-align: center;
     padding: 20px;
     margin-top: 40px;
-    font-size: 0.9rem;
-    color: #ccc;
+    color: #aaa;
 }

@@ -16,7 +16,7 @@
 
     <?php foreach ($classificacao as $c): ?>
         <tr>
-            <td><?= $c['nome'] ?></td>
+            <td><?= $c['selecao'] ?></td>
             <td><?= $c['pontos'] ?></td>
             <td><?= $c['gols_pro'] ?></td>
             <td><?= $c['gols_contra'] ?></td>

@@ -124,3 +124,8 @@ Integração com banco de dados
 Manipulação de relacionamentos entre entidades
 
 Atualização automática de estatísticas
+
+
+Feito por:
+https://github.com/mariamagalhaaes e 
+https://github.com/marya-gael

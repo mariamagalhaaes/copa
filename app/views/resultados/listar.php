@@ -4,18 +4,14 @@
 
 <table border="1">
     <tr>
-        <th>Seleção</th>
-        <th>Pontos</th>
-        <th>Gols Marcados</th>
-        <th>Gols Sofridos</th>
+        <th>Data/Hora</th>
+        <th>Placar</th>
     </tr>
 
     <?php foreach ($resultados as $r): ?>
         <tr>
-            <td><?= $r['selecao'] ?></td>
-            <td><?= $r['pontos'] ?></td>
-            <td><?= $r['gols_marcados'] ?></td>
-            <td><?= $r['gols_sofridos'] ?></td>
+            <td><?= $r['data'] ?></td>
+            <td><?= $r['mandante'] ?> <?= $r['gol_mandante'] ?> x <?= $r['gol_visitante'] ?> <?= $r['visitante'] ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

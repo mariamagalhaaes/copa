@@ -27,10 +27,17 @@ SET time_zone = "+00:00";
 -- Estrutura para tabela `resultado`
 --
 
+DROP TABLE IF EXISTS `resultado`;
 CREATE TABLE `resultado` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `jogo_id` int(11) NOT NULL,
   `gol_mandante` int(11) NOT NULL,
-  `gol_visitante` int(11) NOT NULL
+  `gol_visitante` int(11) NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_jogo` (`jogo_id`),
+  CONSTRAINT `fk_resultado_jogo` FOREIGN KEY (`jogo_id`) REFERENCES `jogos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -41,7 +48,8 @@ CREATE TABLE `resultado` (
 -- Índices de tabela `resultado`
 --
 ALTER TABLE `resultado`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_jogo` (`jogo_id`);
 
 --
 -- AUTO_INCREMENT para tabelas despejadas

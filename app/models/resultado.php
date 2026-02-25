@@ -12,32 +12,32 @@ class Resultado {
     }
 
     // 🔹 REGISTRAR RESULTADO DO JOGO
-    public function registrarResultado($jogo_id, $gols_mandante, $gols_visitante) {
+    public function registrarResultado($jogo_id, $gol_mandante, $gol_visitante) {
 
-        // Atualiza placar no jogo
-        $sql = "UPDATE jogos 
-                SET gols_mandante = ?, gols_visitante = ?
-                WHERE id = ?";
-        
+        // Insere resultado na tabela 'resultados'
+        $sql = "INSERT INTO resultado (jogo_id, gol_mandante, gol_visitante)
+            VALUES (?, ?, ?)";
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("iii", $gols_mandante, $gols_visitante, $jogo_id);
-        $stmt->execute();
+        $stmt->execute([$jogo_id, $gol_mandante, $gol_visitante]);
 
-        // Buscar seleções do jogo
-        $sqlJogo = "SELECT selecao_mandante_id, selecao_visitante_id 
-                    FROM jogos WHERE id = ?";
+        // Buscar seleções do jogo com JOIN para pegar os IDs
+        $sqlJogo = "SELECT s_mandante.id AS id_mandante, s_visitante.id AS id_visitante
+                    FROM jogos j
+                    JOIN selecoes s_mandante ON j.selecao_mandante = s_mandante.nome
+                    JOIN selecoes s_visitante ON j.selecao_visitante = s_visitante.nome
+                    WHERE j.id = ?";
         
         $stmtJogo = $this->conn->prepare($sqlJogo);
-        $stmtJogo->bind_param("i", $jogo_id);
-        $stmtJogo->execute();
-        $resultadoJogo = $stmtJogo->get_result()->fetch_assoc();
+        $stmtJogo->execute([$jogo_id]);
+        $resultadoJogo = $stmtJogo->fetch(PDO::FETCH_ASSOC);
 
-        $mandante = $resultadoJogo['selecao_mandante_id'];
-        $visitante = $resultadoJogo['selecao_visitante_id'];
+        $mandante_id = $resultadoJogo['id_mandante'];
+        $visitante_id = $resultadoJogo['id_visitante'];
 
-        // Atualizar classificação
-        $this->atualizarClassificacao($mandante, $gols_mandante, $gols_visitante);
-        $this->atualizarClassificacao($visitante, $gols_visitante, $gols_mandante);
+        // Atualizar classificação com os IDs das seleções
+        $this->atualizarClassificacao($mandante_id, $gol_mandante, $gol_visitante);
+        $this->atualizarClassificacao($visitante_id, $gol_visitante, $gol_mandante);
     }
 
     // 🔹 ATUALIZA CLASSIFICAÇÃO
@@ -60,40 +60,52 @@ class Resultado {
 
         $saldo = $gols_pro - $gols_contra;
 
-        $sql = "UPDATE classificacao SET 
-                pontos = pontos + ?, 
-                vitorias = vitorias + ?, 
-                empates = empates + ?, 
-                derrotas = derrotas + ?, 
-                gols_pro = gols_pro + ?, 
-                gols_contra = gols_contra + ?, 
-                saldo_gols = saldo_gols + ?
-                WHERE selecao_id = ?";
+        // INSERT ... ON DUPLICATE KEY UPDATE para inserir ou atualizar
+        $sql = "INSERT INTO classificacao 
+                (selecao, pontos, vitorias, empates, derrotas, jogos, gols_pro, gols_contra, saldo_gols) 
+                VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE 
+                    pontos = pontos + VALUES(pontos),
+                    vitorias = vitorias + VALUES(vitorias),
+                    empates = empates + VALUES(empates),
+                    derrotas = derrotas + VALUES(derrotas),
+                    jogos = jogos + 1,
+                    gols_pro = gols_pro + VALUES(gols_pro),
+                    gols_contra = gols_contra + VALUES(gols_contra),
+                    saldo_gols = saldo_gols + VALUES(saldo_gols),
+                    updated_at = CURRENT_TIMESTAMP";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param(
-            "iiiiiiii",
-            $pontos,
-            $vitorias,
-            $empates,
-            $derrotas,
-            $gols_pro,
-            $gols_contra,
-            $saldo,
-            $selecao_id
-        );
+        $stmt->execute([$selecao_id, $pontos, $vitorias, $empates, $derrotas, $gols_pro, $gols_contra, $saldo]);
+    }
+    public function listar() {
+        $sql = "SELECT j.id,
+                        j.data,
+                        j.horario,
+                        s_mandante.nome AS mandante,
+                        s_visitante.nome AS visitante,
+                        r.gol_mandante,
+                        r.gol_visitante
+                FROM resultado r
+                JOIN jogos j ON r.jogo_id = j.id
+                JOIN selecoes s_mandante ON j.selecao_mandante = s_mandante.nome
+                JOIN selecoes s_visitante ON j.selecao_visitante = s_visitante.nome
+                ORDER BY j.data DESC";
 
-        $stmt->execute();
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-public function classificacao() {
+    public function classificacao() {
 
-    $sql = "SELECT *
-            FROM classificacao
-            ORDER BY pontos DESC, saldo_gols DESC";
+        $sql = "SELECT DISTINCT s.nome, c.*
+                FROM classificacao c
+                JOIN selecoes s ON c.selecao = s.id
+                GROUP BY c.selecao
+                ORDER BY c.pontos DESC, c.saldo_gols DESC";
 
-    $stmt = $this->conn->query($sql);
+        $stmt = $this->conn->query($sql);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

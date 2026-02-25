@@ -10,8 +10,10 @@
 
     <?php foreach ($resultados as $r): ?>
         <tr>
-            <td><?= $r['data'] ?></td>
-            <td><?= $r['mandante'] ?> <?= $r['gol_mandante'] ?> x <?= $r['gol_visitante'] ?> <?= $r['visitante'] ?></td>
+<td><?= $r['selecao_mandante'] ?></td>
+<td><?= $r['gols_mandante'] ?></td>
+<td><?= $r['selecao_visitante'] ?></td>
+<td><?= $r['gols_visitante'] ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

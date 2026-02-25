@@ -11,15 +11,24 @@ class Resultado {
         $this->conn = $database->getConnection();
     }
 
-    // 🔹 REGISTRAR RESULTADO DO JOGO
-    public function registrarResultado($jogo_id, $gol_mandante, $gol_visitante) {
+    public function registrar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Insere resultado na tabela 'resultados'
-        $sql = "INSERT INTO resultado (jogo_id, gol_mandante, gol_visitante)
-            VALUES (?, ?, ?)";
+            $jogo_id = $_POST['jogo_id'];
+            $gols_mandante = $_POST['gols_mandante'];
+            $gols_visitante = $_POST['gols_visitante'];
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$jogo_id, $gol_mandante, $gol_visitante]);
+            // Atualiza placar no jogo
+            $sql = "UPDATE jogos 
+                    SET gols_mandante = :gols_mandante, gols_visitante = :gols_visitante
+                    WHERE id = :id";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':gols_mandante', $gols_mandante);
+            $stmt->bindParam(':gols_visitante', $gols_visitante);
+            $stmt->bindParam(':id', $jogo_id);
+            $stmt->execute();
 
         // Buscar seleções do jogo com JOIN para pegar os IDs
         $sqlJogo = "SELECT s_mandante.id AS id_mandante, s_visitante.id AS id_visitante
@@ -35,9 +44,14 @@ class Resultado {
         $mandante_id = $resultadoJogo['id_mandante'];
         $visitante_id = $resultadoJogo['id_visitante'];
 
-        // Atualizar classificação com os IDs das seleções
-        $this->atualizarClassificacao($mandante_id, $gol_mandante, $gol_visitante);
-        $this->atualizarClassificacao($visitante_id, $gol_visitante, $gol_mandante);
+            // Atualizar classificação
+            $this->atualizarClassificacao($mandante, $gols_mandante, $gols_visitante);
+            $this->atualizarClassificacao($visitante, $gols_visitante, $gols_mandante);
+
+            // Redireciona após registrar
+            header("Location: index.php?controller=resultado&action=listar");
+            exit;
+        }
     }
 
     // 🔹 ATUALIZA CLASSIFICAÇÃO
@@ -76,36 +90,32 @@ class Resultado {
                     updated_at = CURRENT_TIMESTAMP";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$selecao_id, $pontos, $vitorias, $empates, $derrotas, $gols_pro, $gols_contra, $saldo]);
-    }
-    public function listar() {
-        $sql = "SELECT j.id,
-                        j.data,
-                        j.horario,
-                        s_mandante.nome AS mandante,
-                        s_visitante.nome AS visitante,
-                        r.gol_mandante,
-                        r.gol_visitante
-                FROM resultado r
-                JOIN jogos j ON r.jogo_id = j.id
-                JOIN selecoes s_mandante ON j.selecao_mandante = s_mandante.nome
-                JOIN selecoes s_visitante ON j.selecao_visitante = s_visitante.nome
-                ORDER BY j.data DESC";
+        $stmt->bindParam(':pontos', $pontos);
+        $stmt->bindParam(':vitorias', $vitorias);
+        $stmt->bindParam(':empates', $empates);
+        $stmt->bindParam(':derrotas', $derrotas);
+        $stmt->bindParam(':gols_pro', $gols_pro);
+        $stmt->bindParam(':gols_contra', $gols_contra);
+        $stmt->bindParam(':saldo', $saldo);
+        $stmt->bindParam(':selecao_id', $selecao_id);
 
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function classificacao() {
-
-        $sql = "SELECT DISTINCT s.nome, c.*
-                FROM classificacao c
-                JOIN selecoes s ON c.selecao = s.id
-                GROUP BY c.selecao
-                ORDER BY c.pontos DESC, c.saldo_gols DESC";
+        $sql = "SELECT *
+                FROM classificacao
+                ORDER BY pontos DESC, saldo_gols DESC";
 
         $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    // Listar resultados de jogos
+    public function listar() {
+        $sql = "SELECT * FROM jogos ORDER BY data, horario";
+        $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
